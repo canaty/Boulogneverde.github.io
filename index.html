@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Directorio HCD San Isidro | Wtseo Insight</title>
+    <title>Directorio HCD San Isidro</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -19,6 +19,12 @@
             background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(10px);
         }
+        .action-btn {
+            transition: all 0.2s ease;
+        }
+        .action-btn:active {
+            transform: scale(0.95);
+        }
     </style>
 </head>
 <body class="bg-slate-50 min-h-screen">
@@ -28,7 +34,7 @@
         <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
             <div>
                 <h1 class="text-3xl font-bold uppercase tracking-tight">HCD San Isidro</h1>
-                <p class="text-blue-200 font-medium">Panel de Gestión de Concejales - Wtseo</p>
+                <p class="text-blue-200 font-medium italic">Consulta sobre el COU</p>
             </div>
             <div class="flex gap-2 w-full md:w-auto">
                 <div class="relative w-full">
@@ -46,10 +52,21 @@
     </header>
 
     <main class="max-w-7xl mx-auto p-4 md:p-8">
+        <!-- Banner de Campaña con Icono de Twitter -->
+        <div class="mb-8 p-5 bg-orange-50 border-l-4 border-orange-400 rounded-r-xl flex items-start gap-4 shadow-sm">
+            <div class="w-12 h-12 bg-sky-500 rounded-full flex items-center justify-center text-white shrink-0 shadow-md">
+                <i class="fab fa-x-twitter text-xl"></i>
+            </div>
+            <div>
+                <h3 class="font-bold text-orange-800 text-lg">Campaña Actual: Código de Ordenamiento Urbano (COU)</h3>
+                <p class="text-sm text-orange-700 leading-relaxed">Al pulsar en los iconos de <strong>X (Twitter)</strong>, se generará automáticamente una mención consultando su postura sobre el nuevo código. Por las demás redes deberías enviar un mensaje directo a cada concejal. Sé breve y amable por favor. ¡Hagamos oír nuestra voz!</p>
+            </div>
+        </div>
+
         <!-- Filtros rápidos de Bloque -->
         <div class="mb-8 overflow-x-auto pb-2">
             <div class="flex flex-wrap gap-2 justify-start md:justify-center min-w-max md:min-w-0" id="filterContainer">
-                <!-- Se generan dinámicamente -->
+                <!-- Generados dinámicamente -->
             </div>
         </div>
 
@@ -61,36 +78,39 @@
 
     <footer class="bg-slate-100 border-t py-12 mt-12 text-center text-slate-500">
         <div class="max-w-7xl mx-auto px-4">
-            <p class="font-bold text-slate-800 mb-2">Wtseo Digital Strategy</p>
-            <p class="text-sm">Directorio actualizado para análisis de ROI y gestión pública local.</p>
+            <p class="font-bold text-slate-800 mb-2">Wtseo Digital Strategy & Advocacy</p>
+            <p class="text-sm italic">"Transformando datos en presión ciudadana efectiva."</p>
         </div>
     </footer>
 
     <script>
-        // Datos consolidados de todos los CSVs subidos
+        // Configuración de la campaña actual
+        const CAMPAÑA_TEXTO = "¿Qué opinas sobre el nuevo COU en San Isidro? ¿Cómo votarías al respecto?";
+
+        // Datos consolidados (Base de datos completa)
         const concejales = [
-            { nombre: "Guido Alvarado", bloque: "Bloque CAMBIA SAN ISIDRO", periodo: "2023-2027", email: "galvarado@sanisidro.gov.ar", tel: "4512-3379", foto: "http://hcd.sanisidro.gob.ar/wp-content/uploads/2026/03/Alvarado-1.jpg", redes: ["https://facebook.com/guido.alvarado.1", "https://twitter.com/guidoalvarado", "https://instagram.com/guidoalvarado1/"] },
-            { nombre: "Jorge Álvarez", bloque: "Primero San Isidro", periodo: "2025-2029", email: "info@sanisidro.gov.ar", tel: "4512-3365", foto: "https://hcd.sanisidro.gob.ar/wp-content/uploads/2026/04/Jorge.jpg", redes: [] },
-            { nombre: "Ricardo Antoniassi", bloque: "Primero San Isidro", periodo: "2025-2029", email: "info@sanisidro.gov.ar", tel: "4512-3383", foto: "http://hcd.sanisidro.gob.ar/wp-content/uploads/2026/03/Antoniassi-1.jpg", redes: [] },
-            { nombre: "Bárbara Broese", bloque: "ConVocación por San Isidro", periodo: "2025-2029", email: "bbroese@sanisidro.gov.ar", tel: "4512-3380", foto: "http://hcd.sanisidro.gob.ar/wp-content/uploads/2026/03/Broese.jpg", redes: [] },
-            { nombre: "Federico Colombo", bloque: "PRO – Juntos por el Cambio", periodo: "2025-2029", email: "fcolombo@sanisidro.gov.ar", tel: "4512-3367", foto: "http://hcd.sanisidro.gob.ar/wp-content/uploads/2026/03/Colombo-1.jpg", redes: [] },
-            { nombre: "Marcos Alcides Díaz", bloque: "Frente Renovador", periodo: "2025-2029", email: "marcosdiaz@sanisidro.gov.ar", tel: "4512-3266", foto: "http://hcd.sanisidro.gob.ar/wp-content/uploads/2026/03/Diaz.jpg", redes: ["https://facebook.com/marcosalcidesd", "https://twitter.com/MarcosAlcidesD", "https://instagram.com/marcosalcidesdiaz/"] },
-            { nombre: "Manuel Durand Aparicio", bloque: "CAMBIA SAN ISIDRO", periodo: "2025-2029", email: "mdurand@sanisidro.gov.ar", tel: "4512-3369", foto: "http://hcd.sanisidro.gob.ar/wp-content/uploads/2026/03/Durand-Aparicio.jpg", redes: [] },
-            { nombre: "Bernabé Durini Quintana", bloque: "ConVocación por San Isidro", periodo: "2025-2029", email: "bdurini@sanisidro.gov.ar", tel: "4512-3381", foto: "http://hcd.sanisidro.gob.ar/wp-content/uploads/2026/03/Durini-Quintana-1.jpg", redes: ["https://facebook.com/bernabe.durini", "https://instagram.com/bernabedurini/", "https://twitter.com/BJDurini"] },
-            { nombre: "María Inés Feldtmann", bloque: "ConVocación por San Isidro", periodo: "2021-2025", email: "mfeldtmann@sanisidro.gob.ar", tel: "4512-3260", foto: "http://hcd.sanisidro.gob.ar/wp-content/uploads/2026/03/Feldtmann.jpg", redes: ["https://facebook.com/mariafeldtmannm", "https://twitter.com/MariaFeldtmann", "https://instagram.com/mariafeldtmann"] },
-            { nombre: "Adriana Fosatti", bloque: "ConVocación por San Isidro", periodo: "2025-2029", email: "afosatti@sanisidro.gov.ar", tel: "4512-3382", foto: "http://hcd.sanisidro.gob.ar/wp-content/uploads/2026/03/Fosatti.jpg", redes: [] },
-            { nombre: "Virginia Franco", bloque: "PRO – Juntos por el Cambio", periodo: "2025-2029", email: "vfranco@sanisidro.gov.ar", tel: "4512-3368", foto: "http://hcd.sanisidro.gob.ar/wp-content/uploads/2026/03/Franco.jpg", redes: [] },
-            { nombre: "Fernanda Giordani", bloque: "Primero San Isidro", periodo: "2025-2029", email: "fgiordani@sanisidro.gov.ar", tel: "4512-3384", foto: "http://hcd.sanisidro.gob.ar/wp-content/uploads/2026/03/Giordani.jpg", redes: ["https://facebook.com/fer.giordani", "https://twitter.com/fergiordani1", "https://instagram.com/fer.giordani/"] },
-            { nombre: "Daniela López", bloque: "UCR – San Isidro", periodo: "2025-2029", email: "dlopez@sanisidro.gov.ar", tel: "4512-3370", foto: "http://hcd.sanisidro.gob.ar/wp-content/uploads/2026/03/Lopez.jpg", redes: [] },
-            { nombre: "Federico Meca", bloque: "Frente Renovador", periodo: "2021-2025", email: "fmeca@sanisidro.gob.ar", tel: "4512-3260", foto: "http://hcd.sanisidro.gob.ar/wp-content/uploads/2026/03/Meca.jpg", redes: ["https://facebook.com/FederiMeca", "https://instagram.com/federico.meca/", "https://twitter.com/FedeMeca"] },
-            { nombre: "Alberto Montes", bloque: "La Libertad Avanza", periodo: "2023-2027", email: "amontes@sanisidro.gov.ar", tel: "4512-3375", foto: "http://hcd.sanisidro.gob.ar/wp-content/uploads/2026/03/Montes.jpg", redes: ["https://facebook.com/albertoa.montes.3"] },
-            { nombre: "Diego Montivero", bloque: "Primero San Isidro", periodo: "2025-2029", email: "dmontivero@sanisidro.gov.ar", tel: "4512-3385", foto: "http://hcd.sanisidro.gob.ar/wp-content/uploads/2026/03/Montivero.jpg", redes: [] },
-            { nombre: "Viveka Nyborg Andersen", bloque: "Primero San Isidro", periodo: "2025-2029", email: "vnyborg@sanisidro.gov.ar", tel: "4512-3386", foto: "http://hcd.sanisidro.gob.ar/wp-content/uploads/2026/03/Nyborg-Andersen.jpg", redes: ["https://facebook.com/profile.php?id=100063543265882", "https://twitter.com/VivekaAndersen", "https://instagram.com/vivekaandersen.ok/"] },
-            { nombre: "Juan Bautista Ocampo", bloque: "ConVocación por San Isidro", periodo: "2025-2029", email: "jbocampo@sanisidro.gov.ar", tel: "4512-3310", foto: "http://hcd.sanisidro.gob.ar/wp-content/uploads/2026/03/Ocampo.jpg", redes: ["https://twitter.com/OcampoJuanB", "https://instagram.com/juanbaocampo/", "https://facebook.com/juanbautistaocampoCV"] },
-            { nombre: "Walter Pérez", bloque: "San Isidro es Distinto", periodo: "2021-2025", email: "walferper@yahoo.com", tel: "4512-3253", foto: "http://hcd.sanisidro.gob.ar/wp-content/uploads/2026/03/Perez.jpg", redes: ["https://facebook.com/walterfernando.perez.1", "https://twitter.com/WalterPerezSI", "https://instagram.com/walterperezsi/"] },
-            { nombre: "Estefanía Rivadulla Moulin", bloque: "Frente Renovador – Frente Patria", periodo: "2023-2027", email: "erivadulla@sanisidro.gov.ar", tel: "4512-3373", foto: "http://hcd.sanisidro.gob.ar/wp-content/uploads/2026/03/Rivadulla-Moulin.jpg", redes: ["https://facebook.com/stefania.rivadulla", "https://twitter.com/rivadullastefi", "https://instagram.com/estefaniarivadulla/"] },
-            { nombre: "María Lucía Rojo", bloque: "ConVocación por San Isidro", periodo: "2023-2027", email: "mlrojo@sanisidro.gob.ar", tel: "4512-3308", foto: "http://hcd.sanisidro.gob.ar/wp-content/uploads/2026/03/Rojo.jpg", redes: ["https://facebook.com/lucia.rojo.3538039", "https://instagram.com/lucia_rojo03/"] },
-            { nombre: "Debora Ruiz Zeballos", bloque: "Partido Demócrata", periodo: "2023-2027", email: "druiz@sanisidro.gob.ar", tel: "4512-3253", foto: "http://hcd.sanisidro.gob.ar/wp-content/uploads/2026/03/Ruiz-Zeballos.jpg", redes: [] }
+            { nombre: "Guido Alvarado", handle: "@guidoalvarado", bloque: "Bloque CAMBIA SAN ISIDRO", periodo: "2023-2027", email: "galvarado@sanisidro.gov.ar", tel: "4512-3379", foto: "http://hcd.sanisidro.gob.ar/wp-content/uploads/2026/03/Alvarado-1.jpg", redes: ["https://facebook.com/guido.alvarado.1", "https://twitter.com/guidoalvarado", "https://instagram.com/guidoalvarado1/"] },
+            { nombre: "Jorge Álvarez", handle: "@alvarezsi", bloque: "Primero San Isidro", periodo: "2025-2029", email: "info@sanisidro.gov.ar", tel: "4512-3365", foto: "https://hcd.sanisidro.gob.ar/wp-content/uploads/2026/04/Jorge.jpg", redes: ["https://facebook.com/jorgepanaalvarez/", "https://x.com/alvarezsi", "https://instagram.com/jorgepanaalvarez/"] },
+            { nombre: "Ricardo Antoniassi", handle: "", bloque: "Primero San Isidro", periodo: "2025-2029", email: "info@sanisidro.gov.ar", tel: "4512-3383", foto: "http://hcd.sanisidro.gob.ar/wp-content/uploads/2026/03/Antoniassi-1.jpg", redes: [] },
+            { nombre: "Bárbara Broese", handle: "", bloque: "ConVocación por San Isidro", periodo: "2025-2029", email: "bbroese@sanisidro.gov.ar", tel: "4512-3380", foto: "http://hcd.sanisidro.gob.ar/wp-content/uploads/2026/03/Broese.jpg", redes: [] },
+            { nombre: "Federico Colombo", handle: "", bloque: "PRO – Juntos por el Cambio", periodo: "2025-2029", email: "fcolombo@sanisidro.gov.ar", tel: "4512-3367", foto: "http://hcd.sanisidro.gob.ar/wp-content/uploads/2026/03/Colombo-1.jpg", redes: [] },
+            { nombre: "Marcos Alcides Díaz", handle: "@MarcosAlcidesD", bloque: "Frente Renovador", periodo: "2025-2029", email: "marcosdiaz@sanisidro.gov.ar", tel: "4512-3266", foto: "http://hcd.sanisidro.gob.ar/wp-content/uploads/2026/03/Diaz.jpg", redes: ["https://facebook.com/marcosalcidesd", "https://twitter.com/MarcosAlcidesD", "https://instagram.com/marcosalcidesdiaz/"] },
+            { nombre: "Manuel Durand Aparicio", handle: "", bloque: "CAMBIA SAN ISIDRO", periodo: "2025-2029", email: "mdurand@sanisidro.gov.ar", tel: "4512-3369", foto: "http://hcd.sanisidro.gob.ar/wp-content/uploads/2026/03/Durand-Aparicio.jpg", redes: [] },
+            { nombre: "Bernabé Durini Quintana", handle: "@BJDurini", bloque: "ConVocación por San Isidro", periodo: "2025-2029", email: "bdurini@sanisidro.gov.ar", tel: "4512-3381", foto: "http://hcd.sanisidro.gob.ar/wp-content/uploads/2026/03/Durini-Quintana-1.jpg", redes: ["https://facebook.com/bernabe.durini", "https://instagram.com/bernabedurini/", "https://twitter.com/BJDurini"] },
+            { nombre: "María Inés Feldtmann", handle: "@MariaFeldtmann", bloque: "ConVocación por San Isidro", periodo: "2021-2025", email: "mfeldtmann@sanisidro.gob.ar", tel: "4512-3260", foto: "http://hcd.sanisidro.gob.ar/wp-content/uploads/2026/03/Feldtmann.jpg", redes: ["https://facebook.com/mariafeldtmannm", "https://twitter.com/MariaFeldtmann", "https://instagram.com/mariafeldtmann"] },
+            { nombre: "Adriana Fosatti", handle: "", bloque: "ConVocación por San Isidro", periodo: "2025-2029", email: "afosatti@sanisidro.gov.ar", tel: "4512-3382", foto: "http://hcd.sanisidro.gob.ar/wp-content/uploads/2026/03/Fosatti.jpg", redes: [] },
+            { nombre: "Virginia Franco", handle: "", bloque: "PRO – Juntos por el Cambio", periodo: "2025-2029", email: "vfranco@sanisidro.gov.ar", tel: "4512-3368", foto: "http://hcd.sanisidro.gob.ar/wp-content/uploads/2026/03/Franco.jpg", redes: [] },
+            { nombre: "Fernanda Giordani", handle: "@fergiordani1", bloque: "Primero San Isidro", periodo: "2025-2029", email: "fgiordani@sanisidro.gov.ar", tel: "4512-3384", foto: "http://hcd.sanisidro.gob.ar/wp-content/uploads/2026/03/Giordani.jpg", redes: ["https://facebook.com/fer.giordani", "https://twitter.com/fergiordani1", "https://instagram.com/fer.giordani/"] },
+            { nombre: "Daniela López", handle: "", bloque: "UCR – San Isidro", periodo: "2025-2029", email: "dlopez@sanisidro.gov.ar", tel: "4512-3370", foto: "http://hcd.sanisidro.gob.ar/wp-content/uploads/2026/03/Lopez.jpg", redes: [] },
+            { nombre: "Federico Meca", handle: "@FedeMeca", bloque: "Frente Renovador", periodo: "2021-2025", email: "fmeca@sanisidro.gob.ar", tel: "4512-3260", foto: "http://hcd.sanisidro.gob.ar/wp-content/uploads/2026/03/Meca.jpg", redes: ["https://facebook.com/FederiMeca", "https://instagram.com/federico.meca/", "https://twitter.com/FedeMeca"] },
+            { nombre: "Alberto Montes", handle: "", bloque: "La Libertad Avanza", periodo: "2023-2027", email: "amontes@sanisidro.gov.ar", tel: "4512-3375", foto: "http://hcd.sanisidro.gob.ar/wp-content/uploads/2026/03/Montes.jpg", redes: ["https://facebook.com/albertoa.montes.3"] },
+            { nombre: "Diego Montivero", handle: "", bloque: "Primero San Isidro", periodo: "2025-2029", email: "dmontivero@sanisidro.gov.ar", tel: "4512-3385", foto: "http://hcd.sanisidro.gob.ar/wp-content/uploads/2026/03/Montivero.jpg", redes: [] },
+            { nombre: "Viveka Nyborg Andersen", handle: "@VivekaAndersen", bloque: "Primero San Isidro", periodo: "2025-2029", email: "vnyborg@sanisidro.gov.ar", tel: "4512-3386", foto: "http://hcd.sanisidro.gob.ar/wp-content/uploads/2026/03/Nyborg-Andersen.jpg", redes: ["https://facebook.com/profile.php?id=100063543265882", "https://twitter.com/VivekaAndersen", "https://instagram.com/vivekaandersen.ok/"] },
+            { nombre: "Juan Bautista Ocampo", handle: "@OcampoJuanB", bloque: "ConVocación por San Isidro", periodo: "2025-2029", email: "jbocampo@sanisidro.gov.ar", tel: "4512-3310", foto: "http://hcd.sanisidro.gob.ar/wp-content/uploads/2026/03/Ocampo.jpg", redes: ["https://twitter.com/OcampoJuanB", "https://instagram.com/juanbaocampo/", "https://facebook.com/juanbautistaocampoCV"] },
+            { nombre: "Walter Pérez", handle: "@WalterPerezSI", bloque: "San Isidro es Distinto", periodo: "2021-2025", email: "walferper@yahoo.com", tel: "4512-3253", foto: "http://hcd.sanisidro.gob.ar/wp-content/uploads/2026/03/Perez.jpg", redes: ["https://facebook.com/walterfernando.perez.1", "https://twitter.com/WalterPerezSI", "https://instagram.com/walterperezsi/"] },
+            { nombre: "Estefanía Rivadulla Moulin", handle: "@rivadullastefi", bloque: "Frente Renovador – Frente Patria", periodo: "2023-2027", email: "erivadulla@sanisidro.gov.ar", tel: "4512-3373", foto: "http://hcd.sanisidro.gob.ar/wp-content/uploads/2026/03/Rivadulla-Moulin.jpg", redes: ["https://facebook.com/stefania.rivadulla", "https://twitter.com/rivadullastefi", "https://instagram.com/estefaniarivadulla/"] },
+            { nombre: "María Lucía Rojo", handle: "", bloque: "ConVocación por San Isidro", periodo: "2023-2027", email: "mlrojo@sanisidro.gob.ar", tel: "4512-3308", foto: "http://hcd.sanisidro.gob.ar/wp-content/uploads/2026/03/Rojo.jpg", redes: ["https://facebook.com/lucia.rojo.3538039", "https://instagram.com/lucia_rojo03/"] },
+            { nombre: "Debora Ruiz Zeballos", handle: "", bloque: "Partido Demócrata", periodo: "2023-2027", email: "druiz@sanisidro.gob.ar", tel: "4512-3253", foto: "http://hcd.sanisidro.gob.ar/wp-content/uploads/2026/03/Ruiz-Zeballos.jpg", redes: [] }
         ];
 
         let currentFilter = 'Todos';
@@ -98,7 +118,6 @@
         const searchInput = document.getElementById('searchInput');
         const countDisplay = document.getElementById('count');
 
-        // Inicializar Filtros de Bloque
         function setupFilters() {
             const bloques = ['Todos', ...new Set(concejales.map(c => c.bloque))];
             const container = document.getElementById('filterContainer');
@@ -112,7 +131,6 @@
         function filterBy(bloque) {
             currentFilter = bloque;
             render();
-            // Actualizar estilos de botones
             document.querySelectorAll('.filter-btn').forEach(btn => {
                 if(btn.innerText === bloque) {
                     btn.classList.add('bg-blue-700', 'text-white', 'border-blue-700');
@@ -122,6 +140,19 @@
                     btn.classList.add('bg-white', 'text-blue-800');
                 }
             });
+        }
+
+        function generateSocialAction(url, handle, nombre) {
+            const encodedMsg = encodeURIComponent(CAMPAÑA_TEXTO);
+            
+            // Lógica para X (Twitter) - Mencionar al concejal con el mensaje
+            if (url.includes('twitter') || url.includes('x.com')) {
+                const twitterHandle = handle || nombre;
+                return `https://twitter.com/intent/tweet?text=${encodedMsg}&via=${twitterHandle.replace('@','')}`;
+            }
+            
+            // Para Instagram o Facebook, simplemente el link al perfil
+            return url;
         }
 
         function getSocialIcon(url) {
@@ -142,10 +173,7 @@
             countDisplay.innerText = filtered.length;
 
             if (filtered.length === 0) {
-                grid.innerHTML = `<div class="col-span-full py-20 text-center text-slate-400">
-                    <i class="fas fa-user-slash text-5xl mb-4"></i>
-                    <p class="text-xl">No se encontraron resultados para esta búsqueda</p>
-                </div>`;
+                grid.innerHTML = `<div class="col-span-full py-20 text-center text-slate-400 font-medium">No se encontraron resultados</div>`;
                 return;
             }
 
@@ -153,53 +181,43 @@
                 <div class="card-shadow glass rounded-3xl overflow-hidden flex flex-col h-full border border-slate-200 bg-white">
                     <div class="relative h-72 overflow-hidden bg-slate-100">
                         <img src="${c.foto}" alt="${c.nombre}" class="w-full h-full object-cover object-top" onerror="this.src='https://via.placeholder.com/400x500?text=Sin+Foto'">
-                        <div class="absolute inset-0 bg-gradient-to-t from-blue-950/90 via-transparent to-transparent"></div>
+                        <div class="absolute inset-0 bg-gradient-to-t from-blue-950/95 via-transparent to-transparent"></div>
                         <div class="absolute bottom-0 left-0 right-0 p-6">
                             <h2 class="text-white font-bold text-2xl leading-tight mb-1">${c.nombre}</h2>
-                            <div class="inline-block bg-blue-500/30 backdrop-blur-md px-3 py-1 rounded-full border border-white/20">
-                                <span class="text-blue-50 text-xs font-bold uppercase tracking-wider">${c.bloque}</span>
-                            </div>
+                            <span class="text-blue-200 text-xs font-bold uppercase tracking-widest">${c.bloque}</span>
                         </div>
                     </div>
                     
                     <div class="p-6 flex flex-col flex-grow">
-                        <div class="space-y-4 mb-6">
-                            <div class="flex items-start gap-3">
-                                <div class="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center text-blue-600 shrink-0">
-                                    <i class="far fa-calendar-alt text-sm"></i>
-                                </div>
-                                <div>
-                                    <p class="text-[10px] text-slate-400 font-bold uppercase">Período Legislativo</p>
-                                    <p class="text-sm font-semibold text-slate-700">${c.periodo}</p>
-                                </div>
+                        <div class="space-y-4 mb-6 text-sm">
+                            <div class="flex items-center gap-3">
+                                <i class="far fa-calendar-alt text-blue-500 w-5"></i>
+                                <span class="text-slate-600 font-medium">${c.periodo}</span>
                             </div>
-                            
-                            <div class="flex items-start gap-3">
-                                <div class="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center text-blue-600 shrink-0">
-                                    <i class="fas fa-phone-alt text-sm"></i>
-                                </div>
-                                <div>
-                                    <p class="text-[10px] text-slate-400 font-bold uppercase">Contacto Interno</p>
-                                    <p class="text-sm font-semibold text-slate-700">${c.tel}</p>
-                                </div>
+                            <div class="flex items-center gap-3">
+                                <i class="fas fa-phone-alt text-blue-500 w-5"></i>
+                                <span class="text-slate-600 font-medium">${c.tel}</span>
                             </div>
                         </div>
 
-                        <div class="mt-auto pt-4 border-t border-slate-100 flex flex-col gap-3">
-                            <!-- Acción Email -->
-                            <a href="mailto:${c.email}" class="flex items-center justify-center gap-2 w-full py-3 bg-slate-900 hover:bg-black text-white rounded-xl transition-all font-bold text-sm shadow-md">
-                                <i class="far fa-envelope"></i> CONTACTAR POR EMAIL
+                        <div class="mt-auto pt-4 border-t border-slate-100 flex flex-col gap-2">
+                            <a href="mailto:${c.email}?subject=Consulta sobre nuevo COU&body=Estimado ${c.nombre}, ${CAMPAÑA_TEXTO}" 
+                               class="action-btn flex items-center justify-center gap-2 w-full py-3 bg-blue-900 hover:bg-black text-white rounded-xl transition-all font-bold text-sm shadow-md">
+                                <i class="far fa-envelope"></i> CONSULTAR POR EMAIL
                             </a>
 
-                            <!-- Redes Sociales de Impacto -->
                             <div class="flex gap-2">
-                                ${c.redes.length > 0 ? c.redes.map(r => `
-                                    <a href="${r}" target="_blank" 
-                                       class="flex-1 flex items-center justify-center py-2 bg-white border border-slate-200 hover:border-blue-400 hover:text-blue-600 text-slate-600 rounded-xl transition-all text-xl" 
-                                       title="Ver perfil y enviar mensaje">
-                                        ${getSocialIcon(r)}
-                                    </a>
-                                `).join('') : `<span class="text-[10px] py-2 text-slate-400 italic w-full text-center bg-slate-50 rounded-lg">Ficha sin redes sociales verificadas</span>`}
+                                ${c.redes.length > 0 ? c.redes.map(r => {
+                                    const actionUrl = generateSocialAction(r, c.handle, c.nombre);
+                                    const isTwitter = r.includes('twitter') || r.includes('x.com');
+                                    return `
+                                        <a href="${actionUrl}" target="_blank" 
+                                           class="action-btn flex-1 flex items-center justify-center py-3 ${isTwitter ? 'bg-sky-500 hover:bg-sky-600 text-white shadow-sm' : 'bg-slate-50 text-slate-600 border border-slate-200'} rounded-xl transition-all text-xl" 
+                                           title="${isTwitter ? 'Tuitear consulta' : 'Ver perfil'}">
+                                            ${getSocialIcon(r)}
+                                        </a>
+                                    `;
+                                }).join('') : `<span class="text-[10px] py-2 text-slate-400 italic w-full text-center">Sin redes vinculadas</span>`}
                             </div>
                         </div>
                     </div>
